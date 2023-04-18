@@ -3,6 +3,8 @@ const express = require("express");
 // create instance of express
 const app = express();
 
+app.use(express.static("public"));
+
 // get data
 const data = require("./data.json");
 
@@ -22,18 +24,22 @@ app.get("/users/:quantity", (request, response) => {
   response.send(cutData);
 });
 
-// Get James
-app.get("/user/james", (request, response) => {
-  console.log("Someone is trying to access James");
+// Get User by username
+app.get("/user/search/:username", (request, response) => {
+  console.log(`Someone is trying to access ${request.params.username}`);
 
-  let james = [...data.users];
-  james = james.filter((user) => {
-    return user.firstName === "James";
+  let searchedUser = [...data.users];
+  searchedUser = searchedUser.filter((user) => {
+    return user.username === request.params.username;
   });
-  response.send(james);
+  response.send(searchedUser);
 });
 
 // start server
-app.listen(6001, () => {
+const port = 6001;
+
+app.listen(process.env.PORT || port, () => {
   console.log("the server is alive");
+  console.log(process);
+  console.log(process.env);
 });
