@@ -1,12 +1,39 @@
 const express = require("express");
-
-// create instance of express
 const app = express();
-
+// const cors = require("cors");
 app.use(express.static("public"));
 
-// get data
+// cors Middleware
+// app.use(cors());
+
+// Get API Keys
+const apiKeys = require("./apiKeys.json");
+// Get data
 const data = require("./data.json");
+
+// Authorisation Middle ware - Check whether request has API key in header which matches one stored in database
+app.use((request, response, next) => {
+  let apiKey = [...apiKeys.apiKeys];
+
+  apiKey = apiKey.filter((key) => {
+    return key.username === request.headers.username;
+  });
+
+  console.log(apiKey);
+
+  if (request.headers.apiKey === apiKey.key) {
+    console.log(`API key is valid ${apiKey.username} is accessing the api`);
+    console.log("this runs");
+    next();
+  } else {
+    response.status(404).send("Your API key is not valid");
+  }
+});
+
+app.use((request, response, next) => {
+  console.log("Onion layer 1 activated");
+  next();
+});
 
 // route
 app.get("/users", (request, response) => {
@@ -38,8 +65,4 @@ app.get("/user/search/:username", (request, response) => {
 // start server
 const port = 6001;
 
-app.listen(process.env.PORT || port, () => {
-  console.log("the server is alive");
-  console.log(process);
-  console.log(process.env);
-});
+app.listen(process.env.PORT || port);
