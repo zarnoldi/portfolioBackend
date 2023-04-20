@@ -1,38 +1,45 @@
 const express = require("express");
 const app = express();
-// const cors = require("cors");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 app.use(express.static("public"));
 
 // cors Middleware
-// app.use(cors());
+app.use(cors());
 
 // Get API Keys
 const apiKeys = require("./apiKeys.json");
 // Get data
 const data = require("./data.json");
 
-// Authorisation Middle ware - Check whether request has API key in header which matches one stored in database
+// Authorisation Middle ware - Check the usernames whether request has API key in header which matches one stored in database
 app.use((request, response, next) => {
   let apiKey = [...apiKeys.apiKeys];
 
+  // Filters out API Key for Username sent via header
   apiKey = apiKey.filter((key) => {
     return key.username === request.headers.username;
   });
 
-  console.log(apiKey);
-
+  // check if API key associated with username is the same as the one sent in the header
   if (request.headers.apiKey === apiKey.key) {
+    // if Yes then run Next
     console.log(`API key is valid ${apiKey.username} is accessing the api`);
-    console.log("this runs");
     next();
+    // if No send 404 response
   } else {
     response.status(404).send("Your API key is not valid");
   }
 });
 
-app.use((request, response, next) => {
-  console.log("Onion layer 1 activated");
-  next();
+// body parser middleware - takes the request body and turns it into a JSON which can be output
+app.use(bodyParser.json());
+
+// POST route
+app.post("/user", (request, response) => {
+  response.send("thanks for adding a user");
+  data.users.push(request.body);
+  console.log(data);
 });
 
 // route
