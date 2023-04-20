@@ -9,8 +9,6 @@ app.use(cors());
 
 // Get API Keys
 const apiKeys = require("./apiKeys.json");
-// Get data
-const data = require("./data.json");
 
 // Authorisation Middle ware - Check the usernames whether request has API key in header which matches one stored in database
 app.use((request, response, next) => {
@@ -35,39 +33,8 @@ app.use((request, response, next) => {
 // body parser middleware - takes the request body and turns it into a JSON which can be output
 app.use(bodyParser.json());
 
-// POST route
-app.post("/user", (request, response) => {
-  response.send("thanks for adding a user");
-  data.users.push(request.body);
-  console.log(data);
-});
-
-// route
-app.get("/users", (request, response) => {
-  console.log("Someone is trying to access /users");
-  response.send(data);
-  console.log(request);
-});
-
-// user email
-app.get("/users/:quantity", (request, response) => {
-  console.log(`Someone is trying to access ${request.params.quantity} users`);
-  const cutData = [...data.users];
-  cutData.length = request.params.quantity;
-  console.log(request.params);
-  response.send(cutData);
-});
-
-// Get User by username
-app.get("/user/search/:username", (request, response) => {
-  console.log(`Someone is trying to access ${request.params.username}`);
-
-  let searchedUser = [...data.users];
-  searchedUser = searchedUser.filter((user) => {
-    return user.username === request.params.username;
-  });
-  response.send(searchedUser);
-});
+// Redirects user requests to users route
+app.use("/users", require("./routes/users"));
 
 // start server
 const port = 6001;
