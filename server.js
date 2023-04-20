@@ -22,7 +22,7 @@ app.use((request, response, next) => {
   // check if API key associated with username is the same as the one sent in the header
   if (request.headers.apiKey === apiKey.key) {
     // if Yes then run Next
-    console.log(`API key is valid ${apiKey.username} is accessing the api`);
+    console.log(`API key is valid ${apiKey[0].username} is accessing the api`);
     next();
     // if No send 404 response
   } else {
@@ -35,6 +35,9 @@ app.use(bodyParser.json());
 
 // Redirects user requests to users route
 app.use("/users", require("./routes/users"));
+
+// Redirects user requests to chatroom route
+app.use("/chatrooms", require("./routes/chatrooms"));
 
 // start server
 const port = 6001;
