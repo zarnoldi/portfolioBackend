@@ -1,0 +1,11 @@
+{
+  "chatrooms": [
+    {
+      "name": "chatroom1",
+      "description": "This is the first chatroom",
+      "owner": "atuny0",
+      "users": ["atuny0", "corboy93"],
+      "posts": []
+    }
+  ]
+}

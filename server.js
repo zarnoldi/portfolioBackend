@@ -8,7 +8,7 @@ app.use(express.static("public"));
 app.use(cors());
 
 // Get API Keys
-const apiKeys = require("./apiKeys.json");
+const apiKeys = require("./data/apiKeys.json");
 
 // Authorisation Middle ware - Check the usernames whether request has API key in header which matches one stored in database
 app.use((request, response, next) => {

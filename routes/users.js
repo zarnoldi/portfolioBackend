@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express.Router();
-const data = require("../users.json");
+const data = require("../data/users.json");
 
 // POST route adds user
 app.post("/add", (request, response) => {
